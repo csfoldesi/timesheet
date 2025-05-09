@@ -3,11 +3,11 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { Controller, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
-
+//import { hu } from "react-day-picker/locale";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { FormControl, FormDescription, FormItem, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useState } from "react";
@@ -15,9 +15,10 @@ import { useState } from "react";
 type DateTimePickerProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
+  label?: string;
 };
 
-export function DateTimePicker<T extends FieldValues>({ form, name }: DateTimePickerProps<T>) {
+export function DateTimePicker<T extends FieldValues>({ form, name, label }: DateTimePickerProps<T>) {
   const [open, setOpen] = useState(false);
 
   function handleDateSelect(date: Date | undefined) {
@@ -50,7 +51,8 @@ export function DateTimePicker<T extends FieldValues>({ form, name }: DateTimePi
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <Popover open={open} onOpenChange={setOpen}>
+          {label && <FormLabel>{label}</FormLabel>}
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button

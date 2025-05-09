@@ -10,19 +10,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "@/components/date-time-picker";
 
+type TimesheetFormProps = {
+  name?: string;
+  timeFrom?: Date;
+  timeTo?: Date;
+  onClose?: () => void;
+};
+
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   timeFrom: z.date(),
   timeTo: z.date(),
 });
 
-const HomePage = () => {
+export const TimesheetForm = ({ name, timeFrom, timeTo, onClose }: TimesheetFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      timeFrom: new Date(),
-      timeTo: new Date(),
+      name,
+      timeFrom,
+      timeTo,
     },
   });
 
@@ -32,6 +39,7 @@ const HomePage = () => {
     try {
       await axios.post("/api/timesheetitems", values);
       toast.success("Timesheet item created");
+      if (onClose) onClose();
     } catch {
       toast.error("Something went wrong");
     }
@@ -54,11 +62,11 @@ const HomePage = () => {
               </FormItem>
             )}
           />
-          <DateTimePicker name="timeFrom" form={form} />
-          <DateTimePicker name="timeTo" form={form} />
-          <div className="flex items-center gap-x-2">
+          <DateTimePicker name="timeFrom" form={form} label="From" />
+          <DateTimePicker name="timeTo" form={form} label="To" />
+          <div className="flex justify-end items-center gap-x-2">
             <Button type="submit" disabled={!isValid || isSubmitting}>
-              Continue
+              Save changes
             </Button>
           </div>
         </form>
@@ -66,5 +74,3 @@ const HomePage = () => {
     </div>
   );
 };
-
-export default HomePage;
