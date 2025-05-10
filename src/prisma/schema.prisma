@@ -8,6 +8,31 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Group {
+    id       String   @id @default(uuid())
+    ownerId  String
+    name     String
+    joinCode String
+    members  Member[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Member {
+    id     String @id @default(uuid())
+    userId String
+
+    groupId String
+    group   Group  @relation(fields: [groupId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([groupId])
+    @@index([userId])
+}
+
 model TimesheetItem {
     id       String   @id @default(uuid())
     userId   String
