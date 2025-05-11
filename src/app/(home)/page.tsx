@@ -1,68 +1,31 @@
-"use client";
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { Groups } from "./_components/groups";
 
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { DateTimePicker } from "@/components/date-time-picker";
+const HomePage = async () => {
+  const { userId } = await auth();
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  timeFrom: z.date(),
-  timeTo: z.date(),
-});
-
-const HomePage = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      timeFrom: new Date(),
-      timeTo: new Date(),
+  const groupRecords = await db.member.findMany({
+    where: {
+      userId: userId || "GUEST",
+      group: {
+        isDeleted: false,
+      },
+    },
+    select: {
+      group: true,
+    },
+    orderBy: {
+      group: {
+        name: "asc",
+      },
     },
   });
-
-  const { isSubmitting, isValid } = form.formState;
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      await axios.post("/api/timesheetitems", values);
-      toast.success("Timesheet item created");
-    } catch {
-      toast.error("Something went wrong");
-    }
-  };
+  const groups = groupRecords.map((record) => record.group);
 
   return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input disabled={isSubmitting} placeholder="your name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <DateTimePicker name="timeFrom" form={form} />
-          <DateTimePicker name="timeTo" form={form} />
-          <div className="flex items-center gap-x-2">
-            <Button type="submit" disabled={!isValid || isSubmitting}>
-              Continue
-            </Button>
-          </div>
-        </form>
-      </Form>
+    <div className="container mx-auto">
+      <Groups groups={groups} />
     </div>
   );
 };

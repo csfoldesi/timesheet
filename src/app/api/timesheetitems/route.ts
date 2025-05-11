@@ -21,7 +21,32 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(timesheetItem);
   } catch (error) {
-    console.log("[TIMESHEETITEMS]", error);
+    console.log("[TIMESHEETITEMS_ADD]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const { userId } = await auth();
+    const { own } = await request.json();
+
+    if (!userId) {
+      return new NextResponse("Unathorized", { status: 401 });
+    }
+
+    const timesheetItems = await db.timesheetItem.findMany({
+      where: {
+        ...(own ? { userId } : {}),
+      },
+      orderBy: {
+        timeFrom: "desc",
+      },
+    });
+
+    return NextResponse.json(timesheetItems);
+  } catch (error) {
+    console.log("[TIMESHEETITEMS_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -3,8 +3,8 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { Controller, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
-//import { hu } from "react-day-picker/locale";
 import { cn } from "@/lib/utils";
+import { hu } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -16,9 +16,10 @@ type DateTimePickerProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
   label?: string;
+  onChange?: () => void;
 };
 
-export function DateTimePicker<T extends FieldValues>({ form, name, label }: DateTimePickerProps<T>) {
+export function DateTimePicker<T extends FieldValues>({ form, name, label, onChange }: DateTimePickerProps<T>) {
   const [open, setOpen] = useState(false);
 
   function handleDateSelect(date: Date | undefined) {
@@ -28,6 +29,8 @@ export function DateTimePicker<T extends FieldValues>({ form, name, label }: Dat
       newDate.setHours(currentDate.getHours());
       newDate.setMinutes(currentDate.getMinutes());
       form.setValue(name, newDate as PathValue<T, typeof name>);
+
+      if (onChange) onChange();
     }
   }
 
@@ -43,6 +46,7 @@ export function DateTimePicker<T extends FieldValues>({ form, name, label }: Dat
     }
 
     form.setValue(name, newDate as PathValue<T, typeof name>);
+    if (onChange) onChange();
   }
 
   return (
@@ -66,7 +70,14 @@ export function DateTimePicker<T extends FieldValues>({ form, name, label }: Dat
             <PopoverContent className="w-auto p-0">
               <div className="flex flex-col">
                 <div className="sm:flex">
-                  <Calendar mode="single" selected={field.value} onSelect={handleDateSelect} initialFocus />
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={handleDateSelect}
+                    initialFocus
+                    weekStartsOn={1}
+                    locale={hu}
+                  />
                   <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
                     <ScrollArea className="w-64 sm:w-auto">
                       <div className="flex sm:flex-col p-2">
