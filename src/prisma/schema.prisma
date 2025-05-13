@@ -17,6 +17,7 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    Member    Member[]
 
     @@index([userId])
 }
@@ -37,6 +38,7 @@ model Group {
 model Member {
     id     String @id @default(uuid())
     userId String
+    user   User   @relation(fields: [userId], references: [userId])
 
     groupId String
     group   Group  @relation(fields: [groupId], references: [id])

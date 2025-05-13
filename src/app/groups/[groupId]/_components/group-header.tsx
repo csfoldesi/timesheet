@@ -43,7 +43,7 @@ export const GroupHeader = ({ groupId }: GroupHeaderProps) => {
   };
 
   return (
-    <div className="flex items-center gap-x-2">
+    <div className="flex items-center gap-x-2 p-2">
       <RadioButtonSwitch options={groupViewOptions} defaultValue={selectedView} onChange={setSelectedView} />
       <div className="flex-1" />
       <Dialog open={open} onOpenChange={setOpen}>

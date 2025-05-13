@@ -40,8 +40,7 @@ const GroupPage = async ({ params }: GroupIdParams) => {
 
   return (
     <GroupProvider>
-      <div className="container mx-auto">
-        <p>{group?.name}</p>
+      <div className="container mx-auto rounded-lg border bg-card text-card-foreground shadow-sm">
         <GroupHeader groupId={groupId} />
         <TimesheetTable groupId={groupId} data={timesheet} />
       </div>

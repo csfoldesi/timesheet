@@ -60,10 +60,10 @@ export const Groups = ({ groups }: GroupsProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-[800px]">
+    <div className="flex flex-col gap-4 max-w-[800px] rounded-lg border bg-card text-card-foreground shadow-sm">
       <DeleteDialog />
 
-      <div className="flex items-center justify-end gap-x-2">
+      <div className="flex items-center justify-end gap-x-2 pt-6 pr-6">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" disabled={false}>
@@ -82,33 +82,37 @@ export const Groups = ({ groups }: GroupsProps) => {
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Csoport</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {groups.map((group) => (
-            <TableRow key={group.id}>
-              <TableCell className="font-medium">
-                <Link href={`/groups/${group.id}`}>{group.name}</Link>
-              </TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" title="Edit" onClick={() => onEdit(group)} disabled={isLoading}>
-                  <PenIcon className="h-8 w-8" />
-                </Button>
-                {group.ownerId === user?.id && (
-                  <Button variant="ghost" title="Delete" onClick={() => deleteItem(group.id)} disabled={isLoading}>
-                    <TrashIcon className="h-8 w-8 text-red-600" />
-                  </Button>
-                )}
-              </TableCell>
+      <div className="rounded-md border m-6">
+        <Table>
+          <TableHeader className="bg-slate-100 dark:bg-slate-800">
+            <TableRow>
+              <TableHead className="font-bold">Csoport</TableHead>
+              <TableHead></TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {groups.map((group) => (
+              <TableRow key={group.id}>
+                <TableCell className="font-medium">
+                  <Link href={`/groups/${group.id}`}>{group.name}</Link>
+                </TableCell>
+                <TableCell className="text-right">
+                  {group.ownerId === user?.id && (
+                    <>
+                      <Button variant="ghost" title="Edit" onClick={() => onEdit(group)} disabled={isLoading}>
+                        <PenIcon className="h-8 w-8" />
+                      </Button>
+                      <Button variant="ghost" title="Delete" onClick={() => deleteItem(group.id)} disabled={isLoading}>
+                        <TrashIcon className="h-8 w-8 text-red-600" />
+                      </Button>
+                    </>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

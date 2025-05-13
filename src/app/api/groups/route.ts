@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       data: {
         name,
         ownerId: userId,
-        joinCode: Math.random().toString(36).substring(2, 8),
+        joinCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
       },
     });
 

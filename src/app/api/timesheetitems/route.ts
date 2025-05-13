@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const { userId } = await auth();
-    const { name, timeFrom, timeTo } = await request.json();
+    const { groupId, name, timeFrom, timeTo } = await request.json();
 
     if (!userId) {
       return new NextResponse("Unathorized", { status: 401 });
@@ -13,6 +13,7 @@ export async function POST(request: Request) {
 
     const timesheetItem = await db.timesheetItem.create({
       data: {
+        groupId,
         userId,
         name,
         timeFrom,

@@ -11,9 +11,7 @@ const TimesheetPage = async () => {
   }
 
   const timesheet = await db.timesheetItem.findMany({
-    where: {
-      userId,
-    },
+    where: {},
     orderBy: {
       timeFrom: "desc",
     },

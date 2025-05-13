@@ -1,6 +1,10 @@
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { db } from "@/lib/db";
 import { GroupIdParams } from "@/lib/params";
+import { ChevronLeftIcon } from "lucide-react";
+import Link from "next/link";
+import { Invite } from "./_components/invite";
 
 const GroupInfoPage = async ({ params }: GroupIdParams) => {
   const { groupId } = await params;
@@ -28,7 +32,17 @@ const GroupInfoPage = async ({ params }: GroupIdParams) => {
   const joinUrl = `${process.env.FRONTEND_URL}/groups/${groupId}/join/${group?.joinCode}`;
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 max-w-[800px]">
+      <div className="flex items-center gap-x-2 justify-between">
+        <Link href={`/groups/${groupId}`}>
+          <Button>
+            <ChevronLeftIcon />
+            Vissza
+          </Button>
+        </Link>
+        <div className="text-lg font-bold">A csoport tagjai</div>
+        <Invite joinUrl={joinUrl} />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -47,7 +61,6 @@ const GroupInfoPage = async ({ params }: GroupIdParams) => {
           ))}
         </TableBody>
       </Table>
-      <div>Meghívó: {joinUrl}</div>
     </div>
   );
 };
