@@ -1,11 +1,11 @@
+import { authHelper } from "@/lib/auth-helper";
 import { db } from "@/lib/db";
 import { GroupIdParams } from "@/lib/params";
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request, { params }: GroupIdParams) {
   try {
-    const { userId } = await auth();
+    const { userId } = await authHelper();
     if (!userId) {
       return new NextResponse("Unathorized", { status: 401 });
     }
@@ -46,7 +46,7 @@ export async function DELETE(request: Request, { params }: GroupIdParams) {
 
 export async function PATCH(request: Request, { params }: GroupIdParams) {
   try {
-    const { userId } = await auth();
+    const { userId } = await authHelper();
     if (!userId) {
       return new NextResponse("Unathorized", { status: 401 });
     }

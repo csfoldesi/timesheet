@@ -92,6 +92,8 @@ export async function POST(req: Request) {
           },
         });
       }
+      // TODO: what about groups create dby the user?
+      // TODO: what about user's timesheets?
       return NextResponse.json(userToDelete);
     }
 

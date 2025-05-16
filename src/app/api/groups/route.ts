@@ -1,10 +1,10 @@
+import { authHelper } from "@/lib/auth-helper";
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { userId } = await auth();
+    const { userId } = await authHelper();
     const { name } = await request.json();
 
     if (!userId) {
